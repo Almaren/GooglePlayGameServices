@@ -64,10 +64,10 @@ Fits good to use in a game. The sample project of LibGDX Game will be added soon
 A singleton **GameServices** class provides Google authentication, Google Play services API. 
 Implement GameServicesListener, and the following functions of the class must be called for full cycle initialization:
 
- * 1. init(Activity, EnumSet) call it from your activity onCreate(..)
- * 2. onResume() or from from your activity onStart() method.
- * 3. onActivityResult(int, int, Intent)} call it from your activity onActivityResult(..)
- * 4. destroy() call it from your activity destroy()
+ * init(Activity, EnumSet) call it from your activity onCreate(..)
+ * onResume() or from from your activity onStart() method.
+ * onActivityResult(int, int, Intent)} call it from your activity onActivityResult(..)
+ * destroy() call it from your activity destroy()
 
  When using achievements assign a required ids before calling GameServices.GetInstance().init(Activity, EnumSet):
  GameServices.GetInstance().setUnlockAchievementIds(String[])
@@ -146,23 +146,24 @@ Implement GameServicesListener, and the following functions of the class must be
 
 ### Billing Services Usage
 A singleton **BillingService** provides **no ads purchase option**. Your activity must implement BillingServicesListener.
- * 1. {@link #init(Activity)} call it onCreate() or at first use of BillingServices.
- * 2. {@link #destroy()} call in your onDestroy() method.
- * 3. {@link #onActivityResult(int, int, Intent)} call it from your onActivityResult(..)
+ * init(Activity) call it onCreate() or at first use of BillingServices.
+ * destroy() call in your onDestroy() method.
+ * onActivityResult(int, int, Intent) call it from your onActivityResult(..)
  
 To start purchase no ads flow call -> BillingService.GetInstance().purchaseNoAds()
  
  ```java
  public class MainActivity extends AndroidApplication implements BillingServices.BillingServicesListener {
+ 
     @Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate (Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
         ...
         BillingServices.GetInstance().init(this);
     }
   
     @Override
-	protected void onDestroy() {
+    protected void onDestroy() {
         BillingServices.GetInstance().destroy();
         super.onDestroy();
 		System.exit(0);
@@ -175,14 +176,14 @@ To start purchase no ads flow call -> BillingService.GetInstance().purchaseNoAds
     }
 
     @Override
-	public void onQueryInventoryCompleted(boolean isPurchasedNoAds) {
+    public void onQueryInventoryCompleted(boolean isPurchasedNoAds) {
 		Settings.GetInstance().setShowAds(!isPurchasedNoAds);
-        
+
 		if (isPurchasedNoAds && (SceneManager.GetInstance().getCurrSceneType()
 				== SceneManager.SceneType.MAIN_MENU)) {
 			((MainMenuScene) SceneManager.GetInstance().getCurrScene()).hideNoAdsImg();
 		}
-	}
+    }
 
 	@Override
 	public void onPurchaseFlowCompleted(boolean isSuccess) {
