@@ -61,13 +61,13 @@ Fits good to use in a game. The sample project of LibGDX Game will be added soon
      If you still haven't added an app in Game Services and credentials, read the below instructions.
   
 ### Game Services Usage
-A singleton <b>GameServices</b> class provides Google authentication, Google Play services API. 
+A singleton **GameServices** class provides Google authentication, Google Play services API. 
 Implement GameServicesListener, and the following functions of the class must be called for full cycle initialization:
 
- * 1) init(Activity, EnumSet) call it from your activity onCreate(..)
- * 2) onResume() or from from your activity onStart() method.
- * 3) onActivityResult(int, int, Intent)} call it from your activity onActivityResult(..)
- * 4) destroy() call it from your activity destroy()
+ * 1. init(Activity, EnumSet) call it from your activity onCreate(..)
+ * 2. onResume() or from from your activity onStart() method.
+ * 3. onActivityResult(int, int, Intent)} call it from your activity onActivityResult(..)
+ * 4. destroy() call it from your activity destroy()
 
  When using achievements assign a required ids before calling GameServices.GetInstance().init(Activity, EnumSet):
  GameServices.GetInstance().setUnlockAchievementIds(String[])
@@ -103,10 +103,6 @@ Implement GameServicesListener, and the following functions of the class must be
       keys = incAchievements.keySet();
       GameServices.GetInstance().setIncrementAchievementIds(keys.toArray(new String[keys.size()]));
 
-      // Merge all types of achievements and store as {name, id} in Achievements Manager
-      incAchievements.putAll(achievements);
-      Achievement.GetInstance().setAchievementsIds(incAchievements);
-
       GameServices.GetInstance().init(this, EnumSet.of(SetClient.ACHIEVEMENTS, SetClient.LEADERBOARD));  
     }
 
@@ -125,13 +121,12 @@ Implement GameServicesListener, and the following functions of the class must be
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        GameServices.GetInstance().onActivityResult(requestCode, resultCode, data);
+      super.onActivityResult(requestCode, resultCode, data);
+      GameServices.GetInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onSignInFailed(boolean wasTrySilently) {
-      Gdx.app.log("xo", "AndroidLauncher onSignInFailed");
       if (wasTrySilently) {
         GameServices.GetInstance().signInInteractively();
       }
@@ -150,3 +145,62 @@ Implement GameServicesListener, and the following functions of the class must be
   ```
 
 ### Billing Services Usage
+A singleton **BillingService** provides **no ads purchase option**. Your activity must implement BillingServicesListener.
+ * 1. {@link #init(Activity)} call it onCreate() or at first use of BillingServices.
+ * 2. {@link #destroy()} call in your onDestroy() method.
+ * 3. {@link #onActivityResult(int, int, Intent)} call it from your onActivityResult(..)
+ 
+To start purchase no ads flow call -> BillingService.GetInstance().purchaseNoAds()
+ 
+ ```java
+ public class MainActivity extends AndroidApplication implements BillingServices.BillingServicesListener {
+    @Override
+	protected void onCreate (Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        ...
+        BillingServices.GetInstance().init(this);
+    }
+  
+    @Override
+	protected void onDestroy() {
+        BillingServices.GetInstance().destroy();
+        super.onDestroy();
+		System.exit(0);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        BillingServices.GetInstance().onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+	public void onQueryInventoryCompleted(boolean isPurchasedNoAds) {
+		Settings.GetInstance().setShowAds(!isPurchasedNoAds);
+        
+		if (isPurchasedNoAds && (SceneManager.GetInstance().getCurrSceneType()
+				== SceneManager.SceneType.MAIN_MENU)) {
+			((MainMenuScene) SceneManager.GetInstance().getCurrScene()).hideNoAdsImg();
+		}
+	}
+
+	@Override
+	public void onPurchaseFlowCompleted(boolean isSuccess) {
+		if (isSuccess) {
+			Settings.GetInstance().setShowAds(false);
+			Settings.GetInstance().saveNoAdsSetting();
+			if (SceneManager.GetInstance().getCurrSceneType() == SceneManager.SceneType.MAIN_MENU) {
+				((MainMenuScene) SceneManager.GetInstance().getCurrScene()).hideNoAdsImg();
+			}
+			showMsg(false, getString(R.string.remove_ads_thank_you_message));
+		} else {
+			showMsg(true, getString(R.string.error_restart));
+		}
+	}
+
+	@Override
+	public void onBillingError(Exception e, String msgForUser) {
+		showMsg(true, msgForUser);
+	}
+ }       
+ ```
