@@ -1,0 +1,33 @@
+apply plugin: 'com.android.library'
+
+android {
+    buildToolsVersion "28.0.3"
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "com.google.android.gms:play-services-games:16.0.0"
+    implementation "com.google.android.gms:play-services-auth:16.0.1"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+}

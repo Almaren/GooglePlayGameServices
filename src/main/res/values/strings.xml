@@ -1,0 +1,9 @@
+<resources>
+    <string name="error_achievements">There was an issue communicating with achievements. Please try again.</string>
+    <string name="error_leaderboards">There was an issue communicating with leaderboards. Please try again.</string>
+    <string name="error_billing_already_owned">You have already purchased this option!</string>
+    <string name="error_restart">Error occured. Please restart game and try again.</string>
+    <string name="unknown_error_check_restart">Unknown error occured. Please check connection, restart game and try again.</string>
+
+    <string name="license_key">PUT YOUR APP LICENSE KEY FROM DEVELOPER CONSOLE in all "strings" translations</string>
+</resources>

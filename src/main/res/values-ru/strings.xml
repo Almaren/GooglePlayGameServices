@@ -1,0 +1,9 @@
+<resources>
+    <string name="error_achievements">Ошибка выполнения достижений. Пожалуйста повторите снова.</string>
+    <string name="error_leaderboards">Ошибка выполнения доски почета. Пожалуйста повторите снова.</string>
+    <string name="error_billing_already_owned">Вы уже приобрели эту опцию!</string>
+    <string name="error_restart">Произошла ошибка. Пожалуйста перегрузите игру и попробуйте снова.</string>
+    <string name="unknown_error_check_restart">Произошла ошибка. Пожалуйста проверьте подключение, перегрузите игру и попробуйте снова.</string>
+
+    <string name="license_key">PUT YOUR APP LICENSE KEY FROM DEVELOPER CONSOLE in all "strings" translations</string>
+</resources>
