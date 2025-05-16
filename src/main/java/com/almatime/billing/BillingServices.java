@@ -17,7 +17,7 @@ import java.util.List;
  *
  * <b>R.string.license_key</b> - put your developer public encoded app key.
  *
- * @author Alexander Khrapunsky
+ * @author Alex K
  * @version 1.0.0, 09/11/2018.
  * @since 1.0.0
  */
